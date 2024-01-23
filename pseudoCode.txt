@@ -1,0 +1,57 @@
+//The function that will be creating the employe record
+function creteEmployeeRecord(fourElementEmployeeArray) {
+    return {
+        firstname: fourElementEmployeeArray[0],
+        familyName: fourElementEmployeeArray[1],
+        title: fourElementEmployeeArray[2],
+        payPerHour: fourElementEmployeeArray[3],
+        timeInEvents: [],
+        timeOutEvents: []
+    };
+}
+
+// Function that will convert each nested array into an employee record and should return an array of objects
+function createEmployeeRecords(arrayOfArrays) {
+    const arrayOfObjects = [];
+    const lengthOfArrayOfArrays = arrayOfArrays.length;
+
+    iterate over the lengthOfArrayOfArrays {
+        assign the array to createEmployeeRecord(arrayOfArrays[i]);
+
+        push it to arrayyOfObjects;
+    }
+    return arrayOfObjects;
+}
+
+function createTimeInEvent(employeeRecordObject, dateStamp-("YYYY-MM-DD-HHMM")) {
+    split the dateStamp where there is hypen and put them in repective arrays;
+    convert each array to in since it is a string;
+    searate the HHMMM to be HH to get hour;
+    
+
+    employeeRecordObject.timeInEvents = [hour, date];
+
+    return empl0yeeRecordObject;
+}
+
+function createTimeOutEvent(employeeRecordObject, dateStamp) {
+    split the dateStamp where there is hypen and put them in repective arrays;
+    conver each array to in since it is a string;
+    searate the HHMMM to be HH to get hour;
+    
+
+    employeeRecordObject.timeInEvents = [hour, date];
+
+    return emplyoeeRecordObject;
+}
+
+
+function hoursWorkedOnDate(employeeRecordObject, dateStamp) {
+    hoursElapsed = difference between timeIn and TimeOut;
+
+    return hoursElapsed;
+}
+
+function allWagesFor(employeeRecordObject) {
+
+}
