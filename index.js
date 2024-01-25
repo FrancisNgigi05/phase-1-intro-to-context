@@ -1,41 +1,91 @@
-// Your code here
-function createEmployeeRecord(fourElementEmployeeArray) {
-    return {
-        firstName: fourElementEmployeeArray[0],
-        familyName: fourElementEmployeeArray[1],
-        title: fourElementEmployeeArray[2],
-        payPerHour: fourElementEmployeeArray[3],
-        timeInEvents: [],
-        timeOutEvents: []
-    };
+// This function will be used to create the employees record
+function createEmployeeRecord(fourElementArray) {
+  return {
+    firstName: fourElementArray[0],
+    familyName: fourElementArray[1],
+    title: fourElementArray[2],
+    payPerHour: fourElementArray[3],
+    timeInEvents: [],
+    timeOutEvents: []
+  }
 }
 
+// This function 
 function createEmployeeRecords(arrayOfArrays) {
-  const arrayOfObjects = [];
-  const lengthOfArrayOfArrays = arrayOfArrays.length;
+  // using map to iterate over each array and convert it to a record
+  return (arrayOfArrays.map(function(data) {
+    // Returning the record
+    return (createEmployeeRecord(data));
+  }));
+}
 
-  for (let i = 0; i < lengthOfArrayOfArrays; i++) {
-    // Use createEmployeeRecord function to convert each nested array into an employee record
-    const employeeRecord = createEmployeeRecord(arrayOfArrays[i]);
-    
-    // Accumulate the employee record to the new array
-    arrayOfObjects.push(employeeRecord);
+function createTimeInEvent(employeeRecordObject, dateStamp) {
+  // Breaking down the dateStamp YYYY-MM-DD HHMM into arrays
+
+  // Provide flexibilty to handle any format
+  const [year, month, day, hour, minute] = dateStamp.split(/[- :]/);
+
+  // converting each data to an integer
+  const hourInt = parseInt(hour, 10);
+
+  // The data to feed in the timeInEvents object
+  const timeinEventsData = {
+    type: 'TimeIn',
+    hour: hourInt,
+    date: `${year}-${month}-${day}`
   }
 
-  return arrayOfObjects;
+  employeeRecordObject.timeInEvents.push(timeinEventsData);
+
+  // Returns the updated object
+  return (employeeRecordObject);
 }
 
-function createTimeInEvent(employeeRecord, dateStamp) {
-    const [yearStr, monthStr, dayStr, timeStr] = dateStamp.split('-');
+function createTimeOutEvent(employeeRecordObject, dateStamp) {
+  // Breaking down the dateStamp YYYY-MM-DD HHMM into arrays
 
-    const hour = parseInt(timeStr.slice(0, 2), 10);
+  // Provide flexibilty to handle any format
+  const [year, month, day, hour, minute] = dateStamp.split(/[- :]/);
 
-    const day =  parseInt(dayStr, 10);
+  // converting each data to an integer
+  const hourInt = parseInt(hour, 10);
 
-    const data = createEmployeeRecord(employeeRecord);
+  // The data to feed in the timeInEvents object
+  const timeOutEventsData = {
+    type: 'TimeOut',
+    hour: hourInt,
+    date: `${year}-${month}-${day}`
+  }
 
-    data.timeInEvents = [hour, day];
+  employeeRecordObject.timeOutEvents.push(timeOutEventsData);
 
-    return data;
+  // Returns the updated object
+  return (employeeRecordObject);
 }
 
+function hoursWorkedOnDate(employeeRecord, date) {
+  const timeInEvent = employeeRecord.timeInEvents.find(event => event.date === date);
+  const timeOutEvent = employeeRecord.timeOutEvents.find(event => event.date === date);
+
+  if (timeInEvent && timeOutEvent) {
+    return timeOutEvent.hour - timeInEvent.hour;
+  }
+
+  return 0; // If no matching timeIn and timeOut events are found
+}
+
+
+function wagesEarnedOnDate(employeeRecord, date) {
+  const hoursWorked = hoursWorkedOnDate(employeeRecord, date);
+  return hoursWorked * employeeRecord.payPerHour;
+}
+
+function allWagesFor(employeeRecord) {
+  const allDates = employeeRecord.timeInEvents.map(event => event.date);
+  const totalWages = allDates.reduce((sum, date) => sum + wagesEarnedOnDate(employeeRecord, date), 0);
+  return totalWages;
+}
+
+function calculatePayroll(employeeRecords) {
+  return employeeRecords.reduce((sum, employeeRecord) => sum + allWagesFor(employeeRecord), 0);
+}
